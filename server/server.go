@@ -28,7 +28,6 @@ func (r InitServer) StartServer() {
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
-	time.Sleep(30 * time.Second)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	indexTemplate := `{

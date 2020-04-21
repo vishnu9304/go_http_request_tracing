@@ -5,9 +5,9 @@
 
 ##### Throughput (Requests Per Second) vs. Concurrent Users
 
--  **Throughput** is a measure of how many units of work are being processed. In the case of load testing, this is usually hits per second, also known as requests per second.
+- **Throughput** is a measure of how many units of work are being processed. In the case of load testing, this is usually hits per second, also known as requests per second.
 
--  **Concurrent users** are the number of users engaged with the app or site at a given time. They’re all in the middle of some kind of session, but they are all doing different things.
+- **Concurrent users** are the number of users engaged with the app or site at a given time. They’re all in the middle of some kind of session, but they are all doing different things.
 
 ##### TCP Connection States
 
@@ -30,3 +30,24 @@
   - **Step 4 (FIN from Server)** – Server sends FIN bit segment to the Sender(Client) after some time when Server send the ACK segment (because of some closing process in the Server).
 
   - **Step 5 (ACK from Client)** – When Client receive FIN bit segment from the Server, the client acknowledges the server’s segment and enters the TIME_WAIT state. The TIME_WAIT state lets the client resend the final acknowledgment in case the ACK is lost.The time spent by client in the TIME_WAIT state is depend on their implementation, but their typical values are 30 seconds, 1 minute, and 2 minutes. After the wait, the connection formally closes and all resources on the client side (including port numbers and buffer data) are released.
+  
+##### Golang HTTP Client Connection Pooling
+
+  - By default, the Golang HTTP client will do connection pooling.
+  - Rather than closing a socket connection after an HTTP request, it will add it to an idle connection pool, and if you try to make another HTTP request before the idle connection timeout (90 seconds by default), then it will re-use that existing connection rather than creating a new one.
+  
+  ```go
+  var DefaultTransport RoundTripper = &Transport{
+  MaxIdleConns:          100,
+  IdleConnTimeout:       90 * time.Second,
+  }
+
+  // DefaultMaxIdleConnsPerHost is the default value of Transport's
+  // MaxIdleConnsPerHost.
+  const DefaultMaxIdleConnsPerHost = 2
+  ```
+  - The MaxIdleConns: 100 setting sets the size of the connection pool to 100 connections, but with one major caveat: this is on a per-host basis. See the comments on the DefaultMaxIdleConnsPerHost below for more details on the implications of this.
+
+  - The IdleConnTimeout is set to 90 seconds, meaning that after a connection stays in the pool and is unused for 90 seconds, it will be removed from the pool and closed.
+
+  - The DefaultMaxIdleConnsPerHost = 2 setting below it. What this means is that even though the entire connection pool is set to 100, there is a per-host cap of only 2 connections!
