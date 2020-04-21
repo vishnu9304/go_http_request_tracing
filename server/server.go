@@ -30,6 +30,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	time.Sleep(25 * time.Second)
 	indexTemplate := `{
 	endPoint: "%v",
 	method: "%v",

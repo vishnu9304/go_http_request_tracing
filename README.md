@@ -54,3 +54,15 @@
   - The DefaultMaxIdleConnsPerHost = 2 setting below it. What this means is that even though the entire connection pool is set to 100, there is a per-host cap of only 2 connections!
 
 ![image info](./static/vsc_snippet.png)
+
+- I have opened 3 concurrent http requests. What happens here is it will open 3 tcp connections and after getting the response. It will keep 2 of them open for 90s `IdleConnTimeout says 90s`
+
+- Within 90s if you make any new request the same TCP connection will be used instead of opening new one.
+
+- Client opened 3 TCP connections to the server and they are all in `ESTABLISHED` state.
+
+![image info](./static/term1.png)
+
+- Once the request is served two connections are still in `ESTABLISHED` the other one is in `TIME_WAIT` because we have `DefaultMaxIdleConnsPerHost = 2`.
+
+![image info](./static/term2.png)
