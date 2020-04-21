@@ -61,8 +61,8 @@
 
 - Client opened 3 TCP connections to the server and they are all in `ESTABLISHED` state.
 
-![image info](./static/term1.png)
+![image info](./static/term2.png)
 
 - Once the request is served two connections are still in `ESTABLISHED` the other one is in `TIME_WAIT` because we have `DefaultMaxIdleConnsPerHost = 2`.
 
-![image info](./static/term2.png)
+![image info](./static/term1.png)
