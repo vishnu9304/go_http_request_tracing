@@ -34,6 +34,7 @@
 ##### Golang HTTP Client Connection Pooling
 
   - By default, the Golang HTTP client will do connection pooling.
+
   - Rather than closing a socket connection after an HTTP request, it will add it to an idle connection pool, and if you try to make another HTTP request before the idle connection timeout (90 seconds by default), then it will re-use that existing connection rather than creating a new one.
   
   ```go
@@ -51,3 +52,5 @@
   - The IdleConnTimeout is set to 90 seconds, meaning that after a connection stays in the pool and is unused for 90 seconds, it will be removed from the pool and closed.
 
   - The DefaultMaxIdleConnsPerHost = 2 setting below it. What this means is that even though the entire connection pool is set to 100, there is a per-host cap of only 2 connections!
+
+![image info](./static/vsc_snippet.png)
